@@ -12,5 +12,5 @@
 	(return-from power result)
 )
 
-(print (power 10 3))
+(print (power 3 3))
 
