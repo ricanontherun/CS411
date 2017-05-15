@@ -1,3 +1,4 @@
+; Week 3 - Breadth-first search
 ; Prefilled adjacency list
 (defvar *graph* '(
 	(1 (2 3))
