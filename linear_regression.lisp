@@ -3,10 +3,11 @@
 
 ; Make a list of point structs, this is our data set.
 (setq *points* (list
-	(make-point :x 1 :y 2)
-	(make-point :x 100 :y 200)))
+	(make-point :x 10 :y 2)
+	(make-point :x 20 :y 200)))
 
 ; Calculate the mean of a list of values
+; Returns either the mean of the values, or -1 on error.
 (defun mean(values)
   (setq num (length values))
   (setq value 0)
@@ -20,20 +21,51 @@
   (return-from mean (/ value num)))
 
 ; Calculate the variance of a set of values.
-; The variance is the mean of the squared differences from the mean.
+; Returns either the variance of the values, or -1 on error.
 (defun variance (values)
   (if (eq (length values) 0)
 	(return-from variance -1))
 
   (setq mean (mean values))
-  (setq differences ())
+  (setq squared_differences ())
 
+  ; Push the square of each difference on a list
   (dolist (v values)
-	(push (expt (- mean v) 2) differences))
+	(push (expt (- mean v) 2) squared_differences))
 
-  (return-from variance (mean differences)))
+  ; Return the mean of those squared differences 
+  (return-from variance (mean squared_differences)))
 
-(setq data (list 10 20 30))
+; Calculate the covariance for a set of points
+; Returns the covariance or -1 on error
+(defun covariance(points)
+  	(setq num_points (length points))
 
-(format t "The mean of ~d is ~d ~%" data (mean data))
-(format t "The variance of ~d is ~f ~%" data (variance data))
+	; We need at least two points to calculate covariance.
+  	(if (< num_points 2)
+	  (return-from covariance -1))
+
+	; Extract the x values from the points
+	(setq x_data ())
+
+	(dolist (point *points*)
+	  (push (point-x point) x_data))
+
+	; Extract the y values from the points
+	(setq y_data ())
+
+	(dolist (point *points*)
+	  (push (point-y point) y_data))
+	
+	(setq x_mean (mean x_data))
+	(setq y_mean (mean y_data))
+	(setq sum 0)
+	
+	(dolist (point points)
+	  (setq sum (+ sum
+		(* (- (point-x point) x_mean) (- (point-y point) y_mean))
+		)))
+	
+	(return-from covariance (/ sum num_points)))
+
+(format t "Covariance of ~d is ~f ~%" *points* (covariance *points*))
