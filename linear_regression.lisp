@@ -1,3 +1,7 @@
+; Coefficients, these are global so the prediction function can access them easily
+(setq *b0* 0)
+(setq *b1* 0)
+
 ; Calculate the mean of a list of values
 ; Returns either the mean of the values, or -1 on error.
 (defun Mean(values)
@@ -49,24 +53,27 @@
 
 	(return-from Covariance (/ sum len)))
 
+; Calculate the coefficients
 (defun CalculateCoefficients(x y)
   (setq covariance (Covariance x y))
   (setq variance (Variance x))
-  (setq b1 (/ covariance variance))
+  (setq *b1* (/ covariance variance))
 
   (setq x_mean (Mean x))
   (setq y_mean (Mean y))
 
-  (setq b0 (- y_mean (* b1 x_mean)))
+  (setq *b0* (- y_mean (* *b1* x_mean))))
 
-  (return-from CalculateCoefficients (list b0 b1)))
+; Given a bill amount, calculate the tip amount
+(defun PredictTipAmount(bill)
+	(return-from PredictTipAmount (+ *b0* (* *b1* bill))))
 
 ; TESTING SITUATION
-; Let's say I consistently pay 50% tips on all means. Let's predict what my
-; next tip amount should be!
+; Given two data points, a bill total and the amount I tipped,
+; train the model to predict how much I should tip next time.
 (setq x (list 10 20 30 40))
 (setq y (list 5 10 15 20))
 
 (setq coefficients (CalculateCoefficients x y))
 
-(format t "~f ~f ~%" (nth 0 coefficients) (nth 1 coefficients))
+(format t "~d ~%" (PredictTipAmount 100))
