@@ -71,9 +71,9 @@
 ; TESTING SITUATION
 ; Given two data points, a bill total and the amount I tipped,
 ; train the model to predict how much I should tip next time.
-(setq x (list 10 20 30 40))
-(setq y (list 5 10 15 20))
+(setq bills (list 10 20 30 40))
+(setq tips (list 5 10 15 20))
 
-(setq coefficients (CalculateCoefficients x y))
+(setq coefficients (CalculateCoefficients bills tips))
 
-(format t "~d ~%" (PredictTipAmount 100))
+(format t "Using training data x:~d and y:~d, we can predice that a bill amount of ~d should yield a tip of ~d ~%" bills tips 100 (PredictTipAmount 100))
