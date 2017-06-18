@@ -1,7 +1,9 @@
 /* C/C++ program to solve N Queen Problem using
    backtracking */
 #define N 8
-#include<stdio.h>
+
+#include <stdio.h>
+#include <iostream>
 
 /* A utility function to print solution */
 void printSolution(int board[N][N])
@@ -31,8 +33,10 @@ bool isSafe(int board[N][N], int row, int col)
 
     /* Check upper diagonal on left side */
     for (i=row, j=col; i>=0 && j>=0; i--, j--)
-        if (board[i][j])
+        if (board[i][j]) {
+			std::cout << "Second conditional \n";
             return false;
+		}
 
     /* Check lower diagonal on left side */
     for (i=row, j=col; j>=0 && i<N; i++, j--)
